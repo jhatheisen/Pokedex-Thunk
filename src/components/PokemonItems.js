@@ -7,17 +7,20 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
 
   const dispatch = useDispatch();
   const pokemonId = pokemon.id;
+  // let deleted = false;
 
   const items = useSelector((state) => {
     if (!pokemon.items) return null;
     return pokemon.items.map(itemId => state.items[itemId]);
   });
 
-  console.log('items from pokemon.items: ', items);
+  const stateItems = useSelector(state => state.items);
+
+  console.log('items from stateItems: ', stateItems);
 
   useEffect(() => {
     dispatch(getItems(pokemonId));
-  }, [pokemonId]);
+  }, [pokemonId, dispatch]);
 
   if (!items) {
     return null;
@@ -45,7 +48,11 @@ const PokemonItems = ({ pokemon, setEditItemId }) => {
       )}
       {pokemon.captured && (
         <td className="centered">
-          <button onClick={() => dispatch(deleteItem(item))}>
+          <button onClick={() => {
+            dispatch(deleteItem(item));
+            // deleted = true;
+            }
+          }>
             Delete
           </button>
         </td>
