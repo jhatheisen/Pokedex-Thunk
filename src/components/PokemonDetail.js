@@ -6,7 +6,6 @@ import EditPokemonForm from './EditPokemonForm';
 import ItemForm from './ItemForm';
 import { getOnePokemon } from '../store/pokemon';
 
-
 const PokemonDetail = () => {
   const dispatch = useDispatch();
   const { pokemonId } = useParams();
@@ -18,7 +17,7 @@ const PokemonDetail = () => {
     setShowEditPokeForm(false);
     setEditItemId(null);
     dispatch(getOnePokemon(pokemonId))
-  }, [pokemonId]);
+  }, [pokemonId, dispatch]);
 
   if (!pokemon || !pokemon.moves) {
     return null;

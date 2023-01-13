@@ -51,6 +51,19 @@ export const createPokemon = (pokemon) => async dispatch => {
   }
 }
 
+export const updatePokemon = (pokemon) => async dispatch => {
+  const response = await fetch(`/api/pokemon/${pokemon.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json'},
+    body: JSON.stringify(pokemon)
+  });
+
+  if (response.ok) {
+    const pokemon = await response.json();
+    dispatch(addOnePokemon(pokemon));
+  }
+}
+
 export const getPokemonTypes = () => async dispatch => {
   const response = await fetch(`/api/pokemon/types`);
 

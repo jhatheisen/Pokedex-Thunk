@@ -25,11 +25,59 @@ const remove = (itemId, pokemonId) => ({
   pokemonId
 });
 
+export const getItems = (pokemonId) => async dispatch => {
+  const response = await fetch(`/api/pokemon/${pokemonId}/items`);
+
+  if (response.ok) {
+    const items = await response.json();
+    dispatch(load(items, pokemonId));
+  }
+}
+
+export const addItem = (item) => async dispatch => {
+  const response = await fetch(`/api/pokemon/${item.pokemonId}/items`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json'},
+    body: JSON.stringify(item)
+  });
+
+  if (response.ok) {
+    const item = await response.json();
+    dispatch(add(item));
+  }
+}
+
+export const updateItem = (item) => async dispatch => {
+  const response = await fetch(`/api/items/${item.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json'},
+    body: JSON.stringify(item)
+  });
+
+  if (response.ok) {
+    const item = await response.json();
+    dispatch(update(item));
+  }
+}
+
+export const deleteItem = (item) => async dispatch => {
+  const response = await fetch(`/api/items/${item.id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json'},
+  });
+
+  if (response.ok) {
+    const deletedItemId = await response.json();
+    dispatch(remove(deletedItemId, item.pokemonId));
+  }
+}
+
 const initialState = {};
+// make sure updating item state
 
 const itemsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_ITEMS: 
+    case LOAD_ITEMS:
       const newItems = {};
       action.items.forEach(item => {
         newItems[item.id] = item;
@@ -38,12 +86,12 @@ const itemsReducer = (state = initialState, action) => {
         ...state,
         ...newItems
       }
-    case REMOVE_ITEM: 
+    case REMOVE_ITEM:
       const newState = { ...state };
       delete newState[action.itemId];
       return newState;
     case ADD_ITEM:
-    case UPDATE_ITEM: 
+    case UPDATE_ITEM:
       return {
         ...state,
         [action.item.id]: action.item
